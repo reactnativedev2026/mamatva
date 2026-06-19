@@ -1,0 +1,60 @@
+{
+  "expo": {
+    "name": "Mamvatam App",
+    "slug": "MamvatamApp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/sp2.png",
+    "scheme": "mamvatamapp",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/images/sp2.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff",
+      "dark": {
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#FFFFFF",
+        "foregroundImage": "./assets/images/icon-mamvatam.png"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "package": "com.shubham2468.MamvatamApp",
+       "usesCleartextTraffic": true
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+         "expo-splash-screen",
+        {
+          "image": "./assets/images/sp2.png",
+          "imageWidth": 350,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff",
+          "dark": {
+            "backgroundColor": "#ffffff"
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "extra": {
+      "router": {}
+    
+    }
+  }
+}
