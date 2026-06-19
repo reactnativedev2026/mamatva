@@ -4,11 +4,11 @@
     "slug": "MamvatamApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/sp2.png",
+    "icon": "./assets/images/sp.png",
     "scheme": "mamvatamapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/sp2.png",
+      "image": "./assets/images/sp.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff",
       "dark": {
@@ -22,12 +22,12 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#FFFFFF",
-        "foregroundImage": "./assets/images/icon-mamvatam.png"
+        "foregroundImage": "./assets/images/sp.png"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "package": "com.shubham2468.MamvatamApp",
-       "usesCleartextTraffic": true
+      "usesCleartextTraffic": true
     },
     "web": {
       "output": "static",
@@ -36,9 +36,9 @@
     "plugins": [
       "expo-router",
       [
-         "expo-splash-screen",
+        "expo-splash-screen",
         {
-          "image": "./assets/images/sp2.png",
+          "image": "./assets/images/sp.png",
           "imageWidth": 350,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff",
@@ -53,8 +53,10 @@
       "reactCompiler": true
     },
     "extra": {
-      "router": {}
-    
+      "router": {},
+      "eas": {
+        "projectId": "487e7130-229f-4009-9a51-57865fae4ae3"
+      }
     }
   }
 }
