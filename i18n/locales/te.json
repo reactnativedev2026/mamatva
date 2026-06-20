@@ -95,6 +95,7 @@
   "dashboard": {
     "healthcareProvider": "హెల్త్‌కేర్ పివిటి లిమిటెడ్",
     "checkDailyUtility": "నా రోజువారీ సౌకర్యం చూడండి →",
+    "logout": "లాగ్అవుట్",
     "loadingContent": "లైవ్ కంటెంట్ లోడ్ అవుతోంది...",
     "contentLoadErrorTitle": "కంటెంట్ పూర్తిగా లోడ్ కాలేదు",
     "contentLoadError": "డాష్‌బోర్డ్ కంటెంట్ లోడ్ విఫలమైంది",

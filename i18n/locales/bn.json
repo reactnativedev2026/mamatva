@@ -95,6 +95,7 @@
   "dashboard": {
     "healthcareProvider": "হেলথকেয়ার পিভিটি লিমিটেড",
     "checkDailyUtility": "আমার দৈনিক সুবিধা দেখুন →",
+     "logout": "লগ আউট",
     "loadingContent": "লাইভ কনটেন্ট লোড হচ্ছে...",
     "contentLoadErrorTitle": "কনটেন্ট সম্পূর্ণ লোড হয়নি",
     "contentLoadError": "ড্যাশবোর্ড কনটেন্ট লোড ব্যর্থ",

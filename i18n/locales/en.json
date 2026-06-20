@@ -96,6 +96,7 @@
   "dashboard": {
     "healthcareProvider": "Healthcare pvt limited",
     "checkDailyUtility": "Check out my daily utility →",
+    "logout": "Logout",
     "loadingContent": "Loading live content...",
     "contentLoadErrorTitle": "Content could not fully load",
     "contentLoadError": "Failed to load dashboard content",

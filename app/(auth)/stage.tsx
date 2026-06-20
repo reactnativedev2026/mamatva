@@ -19,7 +19,7 @@ const stageTranslationKeys: Record<StageOption, string> = {
 const StageScreen = () => {
   const router = useRouter();
   const { t } = useTranslation();
-  const { setStage, token } = useUser();
+  const { setStage, token, setAuthStep } = useUser();
   const [selectedStage, setSelectedStage] = useState<UserStage>('');
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -35,7 +35,8 @@ const StageScreen = () => {
     if (!selectedStage || loading) return;
 
     if (selectedStage === 'Explore') {
-      setStage(selectedStage);
+      await setStage(selectedStage);
+      await setAuthStep('completed');
       router.push('/(tabs)');
       return;
     }
@@ -50,9 +51,10 @@ const StageScreen = () => {
     try {
       setLoading(true);
       setErrorMessage('');
-      setStage(selectedStage);
+      await setStage(selectedStage);
       await updateUserStage(token, activeStage);
-      router.push('/(auth)/pregnancy');
+      await setAuthStep('completed');
+      router.push('/(tabs)');
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : t('stage.updateFailed'));
     } finally {

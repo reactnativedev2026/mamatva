@@ -159,7 +159,7 @@
 
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import React, { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { getMe } from '../utils/api';
 
 // ─── Types ────────────────────────────────────────────────────
@@ -177,11 +177,17 @@ type AuthSession = {
   nextScreen?: string;
 };
 
+type AuthStep = 'signin' | 'otp' | 'language' | 'stage' | 'completed' | '';
+
 interface UserContextType {
   stage: UserStage;
   setStage: (stage: UserStage) => Promise<void>;
   token: string;
   session: AuthSession | null;
+  phone: string;
+  authStep: AuthStep;
+  setPhone: (phone: string) => Promise<void>;
+  setAuthStep: (step: AuthStep) => Promise<void>;
   setSession: (session: AuthSession | null) => Promise<void>;
   setToken: (token: string) => Promise<void>;
 }
@@ -193,6 +199,8 @@ const STORAGE_KEYS = {
   stage: 'mamvatam.stage',
   token: 'mamvatam.token',
   session: 'mamvatam.session',
+  phone: 'mamvatam.phone',
+  authStep: 'mamvatam.authStep',
 } as const;
 
 const mapApiStageToUserStage = (activeStage?: string): UserStage => {
@@ -203,30 +211,46 @@ const mapApiStageToUserStage = (activeStage?: string): UserStage => {
 };
 
 // ─── Provider ─────────────────────────────────────────────────
-export const UserProvider = ({ children }: { children: ReactNode }) => {
+interface UserProviderProps {
+  children: ReactNode;
+  onReady?: () => void;
+}
+
+export const UserProvider = ({ children, onReady }: UserProviderProps) => {
   const [stage, setStageState] = useState<UserStage>('');
   const [token, setTokenState] = useState<string>('');
   const [session, setSessionState] = useState<AuthSession | null>(null);
+  const [phone, setPhoneState] = useState<string>('');
+  const [authStep, setAuthStepState] = useState<AuthStep>('');
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const readyCallbackInvoked = useRef(false);
 
   useEffect(() => {
     const loadStorage = async () => {
       try {
-        const [savedStage, savedToken, savedSession] = await Promise.all([
+        const [savedStage, savedToken, savedSession, savedPhone, savedAuthStep] = await Promise.all([
           AsyncStorage.getItem(STORAGE_KEYS.stage),
           AsyncStorage.getItem(STORAGE_KEYS.token),
           AsyncStorage.getItem(STORAGE_KEYS.session),
+          AsyncStorage.getItem(STORAGE_KEYS.phone),
+          AsyncStorage.getItem(STORAGE_KEYS.authStep),
         ]);
 
         if (savedStage) setStageState(savedStage as UserStage);
         if (savedToken) setTokenState(savedToken);
         if (savedSession) setSessionState(JSON.parse(savedSession) as AuthSession);
+        if (savedPhone) setPhoneState(savedPhone);
+        if (savedAuthStep) setAuthStepState(savedAuthStep as AuthStep);
 
-        console.log('💾 Storage loaded:', { savedStage, savedToken });
+        console.log('💾 Storage loaded:', { savedStage, savedToken, savedPhone, savedAuthStep });
       } catch (e) {
         console.log('❌ Storage load error:', e);
       } finally {
         setIsLoaded(true);
+        if (!readyCallbackInvoked.current) {
+          readyCallbackInvoked.current = true;
+          onReady?.();
+        }
       }
     };
 
@@ -257,6 +281,24 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       await AsyncStorage.setItem(STORAGE_KEYS.session, JSON.stringify(nextSession));
     } else {
       await AsyncStorage.removeItem(STORAGE_KEYS.session);
+    }
+  };
+
+  const setPhone = async (nextPhone: string): Promise<void> => {
+    setPhoneState(nextPhone);
+    if (nextPhone) {
+      await AsyncStorage.setItem(STORAGE_KEYS.phone, nextPhone);
+    } else {
+      await AsyncStorage.removeItem(STORAGE_KEYS.phone);
+    }
+  };
+
+  const setAuthStep = async (nextStep: AuthStep): Promise<void> => {
+    setAuthStepState(nextStep);
+    if (nextStep) {
+      await AsyncStorage.setItem(STORAGE_KEYS.authStep, nextStep);
+    } else {
+      await AsyncStorage.removeItem(STORAGE_KEYS.authStep);
     }
   };
 
@@ -300,7 +342,20 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   if (!isLoaded) return null;
 
   return (
-    <UserContext.Provider value={{ stage, setStage, token, session, setSession, setToken }}>
+    <UserContext.Provider
+      value={{
+        stage,
+        setStage,
+        token,
+        session,
+        setSession,
+        setToken,
+        phone,
+        authStep,
+        setPhone,
+        setAuthStep,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

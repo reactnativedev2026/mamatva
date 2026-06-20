@@ -18,7 +18,7 @@ const languages = [
 const LanguageScreen = () => {
   const router = useRouter();
   const { t, i18n } = useTranslation();
-  const { token } = useUser();
+  const { token, setAuthStep } = useUser();
   const [selectedLanguage, setSelectedLanguage] = useState(
     isSupportedLanguage(i18n.language) ? i18n.language : ''
   );
@@ -39,6 +39,7 @@ const LanguageScreen = () => {
       setLoading(true);
       setErrorMessage('');
       await updateUserLanguage(token, selectedLanguage);
+      await setAuthStep('stage');
       router.push('/(auth)/stage');
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : t('language.updateFailed'));

@@ -1,14 +1,27 @@
-import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { Image } from 'expo-image';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useTranslation } from 'react-i18next';
-import { SharedDashboardItems } from './SharedDashboardItems';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useUser } from '../../context/UserContext';
+import { SharedDashboardItems } from './SharedDashboardItems';
 
 export const ConceiveDashboard = () => {
     const insets = useSafeAreaInsets();
+    const router = useRouter();
     const { t } = useTranslation();
+    const { setSession, setToken, setPhone, setAuthStep, setStage } = useUser();
+
+    const handleLogout = async () => {
+        await setSession(null);
+        await setToken('');
+        await setPhone('');
+        await setAuthStep('signin');
+        await setStage('');
+        router.replace('/(auth)/signin');
+    };
 
     return (
         <ScrollView className="flex-1 bg-white" showsVerticalScrollIndicator={false}>
@@ -24,7 +37,9 @@ export const ConceiveDashboard = () => {
                             <Text style={{ fontSize: 16, fontWeight: '700', color: '#1E293B' }}>Miss sarah</Text>
                         </View>
                     </View>
-                    <MaterialIcons name="notifications-none" size={24} color="#EF4444" />
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <MaterialIcons name="notifications-none" size={24} color="#EF4444" />
+                    </View>
                 </View>
 
 
@@ -99,6 +114,12 @@ export const ConceiveDashboard = () => {
             </View>
 
             <SharedDashboardItems />
+
+            <View style={{ padding: 24, alignItems: 'center', paddingBottom: insets.bottom + 60 }}>
+                <TouchableOpacity onPress={handleLogout} style={{ width: '100%', backgroundColor: '#FEE2E2', paddingVertical: 16, borderRadius: 16, alignItems: 'center' }}>
+                    <Text style={{ color: '#B91C1C', fontWeight: '700', fontSize: 16 }}>{t('dashboard.logout')}</Text>
+                </TouchableOpacity>
+            </View>
         </ScrollView>
     );
 };

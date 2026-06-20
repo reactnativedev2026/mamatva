@@ -1,9 +1,7 @@
 // import { SafeAreaView, ScrollView, Text, View } from '@/components/ui/styled';
-// import { useRouter } from 'expo-router';
-// import React, { useState } from 'react';
-// import { useTranslation } from 'react-i18next';
-// import { Image, TouchableOpacity } from 'react-native';
-// import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Redirect } from 'expo-router';
+
+import { useUser } from '../../context/UserContext';
 
 // const onboardingSlides = [
 //   {
@@ -310,7 +308,24 @@ const onboardingSlides = [
 const OnboardingScreen = () => {
   const router = useRouter();
   const { t } = useTranslation();
+  const { token, stage, authStep } = useUser();
   const [currentSlide, setCurrentSlide] = useState(0);
+
+  if (token && stage) {
+    return <Redirect href="/(tabs)" />;
+  }
+
+  if (token && authStep === 'otp') {
+    return <Redirect href="/(auth)/otp" />;
+  }
+
+  if (token && authStep === 'language') {
+    return <Redirect href="/(auth)/language" />;
+  }
+
+  if (token && authStep === 'stage') {
+    return <Redirect href="/(auth)/stage" />;
+  }
 
   const handleNext = () => {
     if (currentSlide < onboardingSlides.length - 1) {

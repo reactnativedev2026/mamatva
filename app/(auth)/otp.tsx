@@ -250,7 +250,7 @@ const OTPScreen = () => {
   const router = useRouter();
   const { t } = useTranslation();
   const params = useLocalSearchParams<{ phone?: string }>();
-  const { setSession, setToken } = useUser();
+  const { setSession, setToken, setAuthStep } = useUser();
   const [otp, setOtp] = useState<string[]>(['', '', '', '']);
   const [timeLeft, setTimeLeft] = useState<number>(180);
   const [errorMessage, setErrorMessage] = useState('');
@@ -303,6 +303,7 @@ const OTPScreen = () => {
       const session = response.data;
       if (session?.accessToken) await setToken(session.accessToken);
       await setSession(session || null);
+      await setAuthStep('language');
       router.push('/(auth)/language');
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : t('otp.verifyFailed'));

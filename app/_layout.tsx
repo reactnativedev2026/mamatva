@@ -16,42 +16,50 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [isI18nReady, setIsI18nReady] = useState(false);
- useEffect(() => {
+  const [isUserReady, setIsUserReady] = useState(false);
+
+  useEffect(() => {
     async function prepare() {
       try {
-        // Fonts, API calls, ya storage check yahan kar sakte hain
-        // 3 seconds ka delay
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        await loadSavedLanguage();
       } catch (e) {
         console.warn(e);
       } finally {
-        // Splash screen ko hide karne ke liye
-        await SplashScreen.hideAsync();
+        setIsI18nReady(true);
       }
     }
 
     prepare();
   }, []);
-  useEffect(() => {
-    loadSavedLanguage().finally(() => setIsI18nReady(true));
-  }, []);
 
-  if (!isI18nReady) {
-    return null;
-  }
- 
+  useEffect(() => {
+    if (!isI18nReady || !isUserReady) return;
+
+    async function hideSplash() {
+      try {
+        await SplashScreen.hideAsync();
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+
+    hideSplash();
+  }, [isI18nReady, isUserReady]);
+
   return (
     <I18nextProvider i18n={i18n}>
-      <UserProvider>
-        <ThemeProvider value={DefaultTheme}>
-          <Stack>
-            <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-          </Stack>
-          <StatusBar style="auto" />
-        </ThemeProvider>
+      <UserProvider onReady={() => setIsUserReady(true)}>
+        {(!isI18nReady || !isUserReady) ? null : (
+          <ThemeProvider value={DefaultTheme}>
+            <Stack>
+              <Stack.Screen name="index" options={{ headerShown: false }} />
+              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+            </Stack>
+            <StatusBar style="auto" />
+          </ThemeProvider>
+        )}
       </UserProvider>
     </I18nextProvider>
   );

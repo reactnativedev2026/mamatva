@@ -95,6 +95,7 @@
   "dashboard": {
     "healthcareProvider": "हेल्थकेअर पीव्हटी लिमिटेड",
     "checkDailyUtility": "माझी दैनिक सुविधा पहा →",
+     "logout": "लॉग आउट",
     "loadingContent": "लाइव्ह सामग्री लोड होत आहे...",
     "contentLoadErrorTitle": "सामग्री पूर्ण लोड होऊ शकली नाही",
     "contentLoadError": "डॅशबोर्ड सामग्री लोड अयशस्वी",

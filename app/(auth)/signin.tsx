@@ -693,11 +693,13 @@ import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, TextInput, TouchableOpacity } from 'react-native';
+import { useUser } from '../../context/UserContext';
 import { requestOtp } from '../../utils/api';
 
 const SignInScreen = () => {
   const router = useRouter();
   const { t } = useTranslation();
+  const { setPhone, setAuthStep } = useUser();
   const [phoneNumber, setPhoneNumber] = useState('');
   const [location, setLocation] = useState('');
   const [isPhoneFocused, setIsPhoneFocused] = useState(false);
@@ -719,6 +721,8 @@ const SignInScreen = () => {
       setLoading(true);
       setErrorMessage('');
       await requestOtp({ phone: phoneNumber, location });
+      await setPhone(phoneNumber);
+      await setAuthStep('otp');
       router.push({ pathname: '/(auth)/otp', params: { phone: phoneNumber, location } });
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : t('signIn.requestOtpFailed'));
